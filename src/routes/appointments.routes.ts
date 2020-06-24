@@ -5,20 +5,20 @@ import AppointmentsRepository from '../repositories/AppointmentsRepository';
 
 const appointmentsRouter = Router();
 
+const appointmentsrepository = new AppointmentsRepository();
 
 appointmentsRouter.post('/', (req, res) => {
     const { provider, date } = req.body;
 
     const parsedDate = startOfHour(parseISO(date));
 
-    const findAppointmentSameDate = appointments.find(appointment =>
-        isEqual(parsedDate, appointment.date));
+    const findAppointmentSameDate = appointmentsrepository.findByDate(parsedDate);
 
     if (findAppointmentSameDate) {
         return res.status(400).json({ message: 'This time is already booked' });
     }
 
-    appointments.push(appointment);
+    const appointment = appointmentsrepository.create(provider, parsedDate)
 
     return res.json(appointment);
 })
