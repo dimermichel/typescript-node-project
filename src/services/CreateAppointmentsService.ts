@@ -4,32 +4,39 @@ import Appointment from '../models/Appointment';
 import AppointmentsRepository from '../repositories/AppointmentsRepository';
 
 interface RequestDTO {
-    provider: string;
+    provider_id: string;
     date: Date;
 }
 
-//Dependency Inversion
+// Dependency Inversion
 
 class CreateAppointmentService {
-    public async execute({provider, date}: RequestDTO): Promise<Appointment> {
-        const appointmentsRepository = getCustomRepository(AppointmentsRepository);
+    public async execute({
+        provider_id,
+        date,
+    }: RequestDTO): Promise<Appointment> {
+        const appointmentsRepository = getCustomRepository(
+            AppointmentsRepository,
+        );
 
         const appointmentDate = startOfHour(date);
 
-    const findAppointmentSameDate = await appointmentsRepository.findByDate(appointmentDate);
+        const findAppointmentSameDate = await appointmentsRepository.findByDate(
+            appointmentDate,
+        );
 
-    if (findAppointmentSameDate) {
-        throw Error("This time is already booked");
-    }
+        if (findAppointmentSameDate) {
+            throw Error('This time is already booked');
+        }
 
-    const appointment = appointmentsRepository.create({
-        provider,
-        date: appointmentDate
-    });
+        const appointment = appointmentsRepository.create({
+            provider_id,
+            date: appointmentDate,
+        });
 
-    await appointmentsRepository.save(appointment);
+        await appointmentsRepository.save(appointment);
 
-    return appointment
+        return appointment;
     }
 }
 
