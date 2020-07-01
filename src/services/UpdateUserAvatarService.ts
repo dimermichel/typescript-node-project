@@ -3,6 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import uploadConfig from '../config/upload';
 import User from '../models/User';
+import AppError from '../error/AppError';
 
 interface Request {
     user_id: string;
@@ -16,7 +17,7 @@ class UpdateUserAvatarService {
         const user = await userRepository.findOne(user_id);
 
         if (!user) {
-            throw new Error('Need auth credentials to update avatar');
+            throw new AppError('Need auth credentials to update avatar', 401);
         }
 
         if (user.avatar) {
