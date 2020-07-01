@@ -25,7 +25,7 @@ export default function ensureAuth(
 
     try {
         const decoded = verify(token, secret, {});
-        console.log(decoded);
+        // console.log(decoded);
         const { sub } = decoded as TokenPayload;
 
         req.user = { id: sub };

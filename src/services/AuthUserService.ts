@@ -4,21 +4,18 @@ import { sign } from 'jsonwebtoken';
 import User from '../models/User';
 import authConfig from '../config/auth';
 
-interface RequestDTO {
+interface Request {
     email: string;
     password: string;
 }
 
-interface ResponseDTO {
+interface Response {
     user: User;
     token: string;
 }
 
 class AuthUserService {
-    public async execute({
-        email,
-        password,
-    }: RequestDTO): Promise<ResponseDTO> {
+    public async execute({ email, password }: Request): Promise<Response> {
         const usersRepository = getRepository(User);
         const user = await usersRepository.findOne({
             where: { email },
