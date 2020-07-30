@@ -1,9 +1,9 @@
-import { getRepository } from 'typeorm';
 import path from 'path';
 import fs from 'fs';
 import uploadConfig from '@config/upload';
 import User from '@modules/users/infra/typeorm/entities/User';
 import AppError from '@shared/error/AppError';
+import IUsersRepository from '../repositories/IUsersRepository';
 
 interface Request {
     user_id: string;
@@ -11,10 +11,11 @@ interface Request {
 }
 
 class UpdateUserAvatarService {
-    public async execute({ user_id, avatarFilename }: Request): Promise<User> {
-        const userRepository = getRepository(User);
+    constructor(private usersRepository: IUsersRepository){}
 
-        const user = await userRepository.findOne(user_id);
+    public async execute({ user_id, avatarFilename }: Request): Promise<User> {
+
+        const user = await this.usersRepository.findById(user_id);
 
         if (!user) {
             throw new AppError('Need auth credentials to update avatar', 401);
@@ -39,7 +40,7 @@ class UpdateUserAvatarService {
 
         user.avatar = avatarFilename;
 
-        userRepository.save(user);
+        this.usersRepository.save(user);
 
         return user;
     }
