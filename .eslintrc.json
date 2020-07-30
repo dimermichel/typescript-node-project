@@ -25,6 +25,7 @@
         "@typescript-eslint/no-unused-vars": ["error", {
             "argsIgnorePattern": "_"
         }],
+        "@typescript-eslint/no-useless-constructor": false,
         "camelcase": "off",
         "import/extensions": [
             "error",
